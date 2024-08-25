@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import plotly.express as px
 import joblib
 from sklearn import metrics
@@ -62,6 +63,7 @@ elif selected == "Data Visualisation":
     row0_1.title("Visualisasi Data Penjualan & Stok")
     with row1_1:
         st.subheader('Histogram Penjualan')
+        st.write('Histogram digunakan untuk memahami bagaimana data tersebar dalam rentang nilai tertentu. Ini membantu mengidentifikasi pola distribusi seperti simetri, skewness (kemiringan), dan keberadaan outlier. Dengan histogram, kita dapat dengan mudah melihat nilai atau rentang nilai yang paling sering muncul. Histogram juga berguna untuk melihat seberapa bervariasi data dalam kelompok-kelompok tertentu dan apakah ada kecenderungan atau anomali dalam data.')
         fitur = st.selectbox('Fitur', ('penjualan_1', 'penjualan_2', 'penjualan_3', 'penjualan_4', 'penjualan_5', 'penjualan_6', 'penjualan_7', 'penjualan_8', 'penjualan_9', 'penjualan_10', 'penjualan_11', 'penjualan_12'))
         fig = px.histogram(df1, x=fitur, marginal='box', hover_data=df1.columns)
         st.plotly_chart(fig)
@@ -75,6 +77,7 @@ elif selected == "Data Visualisation":
         st.plotly_chart(fig)
     with row1_2:
         st.subheader('Scatter Plot Penjualan')
+        st.write('Scatter plot digunakan untuk mengidentifikasi dan memvisualisasikan hubungan atau korelasi antara dua variabel. Misalnya, apakah satu variabel cenderung meningkat ketika variabel lain meningkat (korelasi positif) atau sebaliknya (korelasi negatif). Scatter plot bisa membantu mengidentifikasi pola yang lebih kompleks, seperti clustering (pengelompokan) atau trend linear/non-linear di dalam data.Scatter plot juga memungkinkan kita untuk dengan mudah melihat outlier, yaitu titik-titik data yang berada jauh dari tren umum yang ada di dalam dataset.')
         fitur1 = st.selectbox('Fitur 1', ('penjualan_1', 'penjualan_2', 'penjualan_3', 'penjualan_4', 'penjualan_5', 'penjualan_6', 'penjualan_7', 'penjualan_8', 'penjualan_9', 'penjualan_10', 'penjualan_11', 'penjualan_12'))
         fitur2 = st.selectbox('Fitur 2', ('penjualan_1', 'penjualan_2', 'penjualan_3', 'penjualan_4', 'penjualan_5', 'penjualan_6', 'penjualan_7', 'penjualan_8', 'penjualan_9', 'penjualan_10', 'penjualan_11', 'penjualan_12'))
         fig = px.scatter(df1, x=fitur1, y=fitur2, color='penjualan_12', hover_data=df1.columns)
@@ -115,9 +118,30 @@ elif selected == "Prediction":
             result = pd.DataFrame({'Nama Tanaman':X_test['nama_tanaman'], 'Actual': y_test, 'Predicted': y_pred})
             st.table(result)
 
-            st.write('Mean Absolute Error:', round(metrics.mean_absolute_error(y_test, y_pred),4))
+            bar_width = 0.35
+            index = np.arange(len(X_test['nama_tanaman']))
+
+            # Create the bar chart using Matplotlib
+            fig, ax = plt.subplots(figsize=(12, 8))
+            ax.bar(index, y_test, bar_width, label='Actual', color='b')
+            ax.bar(index + bar_width, y_pred, bar_width, label='Predicted', color='orange')
+
+            # Add labels and title
+            ax.set_xlabel('Nama Tanaman')
+            ax.set_ylabel('Values')
+            ax.set_title('Comparison of Actual and Predicted Values')
+            ax.set_xticks(index + bar_width / 2)
+            ax.set_xticklabels(X_test['nama_tanaman'], rotation=45, ha='right')
+
+            # Add a legend
+            ax.legend()
+
+            # Display the plot in Streamlit
+            st.pyplot(fig)
+
+            # st.write('Mean Absolute Error:', round(metrics.mean_absolute_error(y_test, y_pred),4))
             st.write('Mean Squared Error:', round(metrics.mean_squared_error(y_test, y_pred),4))
-            st.write('Root Mean Squared Error:', round(np.sqrt(metrics.mean_squared_error(y_test, y_pred)),4))
+            # st.write('Root Mean Squared Error:', round(np.sqrt(metrics.mean_squared_error(y_test, y_pred)),4))
             st.write('Coefficient of determination:', round(metrics.r2_score(y_test, y_pred),4))
             st.write('')
 
@@ -143,9 +167,30 @@ elif selected == "Prediction":
             result = pd.DataFrame({'Nama Tanaman':X_test['nama_tanaman'], 'Actual': y_test, 'Predicted': y_pred})
             st.table(result)
 
-            st.write('Mean Absolute Error:', round(metrics.mean_absolute_error(y_test, y_pred),4))
+            bar_width = 0.35
+            index = np.arange(len(X_test['nama_tanaman']))
+
+            # Create the bar chart using Matplotlib
+            fig, ax = plt.subplots(figsize=(12, 8))
+            ax.bar(index, y_test, bar_width, label='Actual', color='b')
+            ax.bar(index + bar_width, y_pred, bar_width, label='Predicted', color='orange')
+
+            # Add labels and title
+            ax.set_xlabel('Nama Tanaman')
+            ax.set_ylabel('Values')
+            ax.set_title('Comparison of Actual and Predicted Values')
+            ax.set_xticks(index + bar_width / 2)
+            ax.set_xticklabels(X_test['nama_tanaman'], rotation=45, ha='right')
+
+            # Add a legend
+            ax.legend()
+
+            # Display the plot in Streamlit
+            st.pyplot(fig)
+
+            # st.write('Mean Absolute Error:', round(metrics.mean_absolute_error(y_test, y_pred),4))
             st.write('Mean Squared Error:', round(metrics.mean_squared_error(y_test, y_pred),4))
-            st.write('Root Mean Squared Error:', round(np.sqrt(metrics.mean_squared_error(y_test, y_pred)),4))
+            # st.write('Root Mean Squared Error:', round(np.sqrt(metrics.mean_squared_error(y_test, y_pred)),4))
             st.write('Coefficient of determination:', round(metrics.r2_score(y_test, y_pred),4))
             st.write('')
 
